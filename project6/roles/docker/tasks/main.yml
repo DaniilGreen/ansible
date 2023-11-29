@@ -1,0 +1,20 @@
+---
+- name: Install Docker
+  become: yes
+  block:
+    - name: Install Docker on Ubuntu
+      apt:
+        name: docker.io
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install Docker on CentOS
+      yum:
+        name: docker
+        state: present
+      when: ansible_distribution == 'CentOS'
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started

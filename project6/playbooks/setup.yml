@@ -1,0 +1,16 @@
+---
+- name: Setup Docker and PostgreSQL
+  hosts: app:database
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - role: /etc/ansible/project6/roles/docker
+      when: "'app' in group_names"
+    - role: /etc/ansible/project6/roles/postgresql
+      when: "'database' in group_names"
+
+  vars:
+    postgres_version: "{{ hostvars[groups['database'][0]]['postgresql_version'] | default('12') }}"
+    postgres_data_dir: "{{ hostvars[groups['database'][0]]['postgresql_data_dir'] | default('/var/lib/pgsql/12/data') }}"
+
